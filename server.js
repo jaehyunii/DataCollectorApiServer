@@ -6,7 +6,7 @@ const log = require('./routes/log');
 const {sequelize} = require('./models');
 
 sequelize
-    .sync({force:false})
+    .sync({force:true})
     .then(()=>{console.log("DB CONNECTED")})
     .catch((err)=>{console.log(err)});
 
