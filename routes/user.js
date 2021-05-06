@@ -5,7 +5,7 @@ const crypto = require('crypto');
 
 const LOGIN_ID_EXIST = 100;
 
-const ADMIN_PASSWORD = 1234;
+const ADMIN_PASSWORD = "1234";
 
 //테스트용 전체 유저 조회
 router.get('/',async(req,res,next)=>{

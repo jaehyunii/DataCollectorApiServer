@@ -11,8 +11,9 @@ const uploader = multer({
         },
         filename(req,file,cb){
             const ext = path.extname(file.originalname);
-	    const userId = req.params.userId 
-            cb(null, 'image'+userId+'_'+Date.now()+ext);
+        const longitude = req.body.longitude;
+        const latitude = req.body.latitude;
+            cb(null, longitude+'_'+latitude+'_'+Date.now()+ext);
         }
     }),
     limits: {fileSize: 5*1024*1024*1024*1024},
@@ -27,10 +28,10 @@ router.post('/',uploader.single('image'),async(req,res,next)=>{
         let filename = req.file.filename;
         let imageLocation = await ImageLocation.create({
             longitude: req.body.longitude,
-            latitude: req.body.longitude,
+            latitude: req.body.latitude,
             filename: filename,
         })
-        res.status(200).send()
+        res.status(200).send(imageLocation)
     }catch(err){
         next(err);
     }
@@ -38,7 +39,7 @@ router.post('/',uploader.single('image'),async(req,res,next)=>{
 
 //실시간 알림
 /*
-router.post('/:userId',uploader.single('image'),async(req,res,next)=>{
+router.post('/:userId',async(req,res,next)=>{
     try{
         //해당 이미지 db에 경로 저장
         //위도, 경도 저장
