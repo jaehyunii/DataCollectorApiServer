@@ -15,7 +15,7 @@ module.exports = {
       for(let i = 1;  i<locations.length; i++){
         accident_prone_areas.push(locations[i]);
       }
-      await queryInterface.bulkInsert('accident_prone_area', accident_prone_areas);
+      await queryInterface.bulkInsert('ACCIDENT_PRONE_AREA', accident_prone_areas);
       
     }
     /**
@@ -30,6 +30,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-     await queryInterface.bulkDelete('accident_prone_area', null, {});
+     await queryInterface.bulkDelete('ACCIDENT_PRONE_AREA', null, {});
   }
 };
