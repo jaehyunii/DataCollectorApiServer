@@ -13,7 +13,7 @@ router.get('/:longitude/:latitude',async(req,res,next)=>{
         + `(6371*acos(cos(radians(${latitude}))*cos(radians(latitude))*cos(radians(longitude)-radians(${longitude}))`
         + `+sin(radians(${latitude}))*sin(radians(latitude)))) AS distance `
         + `FROM ACCIDENT_PRONE_AREA `
-        + `HAVING distance < 1 ORDER BY distance`;
+        + `HAVING distance < 0.1 ORDER BY distance`;
 	
 	const result = await AccidentProneArea.sequelize.query(sql,{type:AccidentProneArea.sequelize.QueryTypes.SELECT});
      

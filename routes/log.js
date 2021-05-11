@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const ImageLocation = require('../models/image_location');
+const Video = require('../models/video');
 const AccidentProneArea = require('../models/accident_prone_area');
 const multer = require('multer');
 const path = require('path');
@@ -13,20 +14,20 @@ const uploader = multer({
             const ext = path.extname(file.originalname);
         const longitude = req.body.longitude;
         const latitude = req.body.latitude;
-            cb(null, longitude+'_'+latitude+'_'+Date.now()+ext);
+	const videoId = typeof req.body.videoId == 'undefined'? 0 : req.body.videoId;
+            cb(null, videoId+'_'+longitude+'_'+latitude+'_'+Date.now()+ext);
         }
     }),
     limits: {fileSize: 5*1024*1024*1024*1024},
 });
 
-
-//유저정보, 비디오id
-router.post('/',uploader.single('image'),async(req,res,next)=>{
+//이미지
+router.post('/image',uploader.single('image'),async(req,res,next)=>{
     try{
         //해당 이미지 db에 경로 저장
         //위도, 경도 저장
-        let filename = req.file.filename;
-        let imageLocation = await ImageLocation.create({
+        const filename = req.file.filename;
+        const imageLocation = await ImageLocation.create({
             longitude: req.body.longitude,
             latitude: req.body.latitude,
             filename: filename,
@@ -37,19 +38,50 @@ router.post('/',uploader.single('image'),async(req,res,next)=>{
     }
 });
 
-//실시간 알림
-/*
-router.post('/:userId',async(req,res,next)=>{
+//비디오
+router.get('/video/start/:userId',async(req,res,next)=>{
     try{
-        //해당 이미지 db에 경로 저장
-        //위도, 경도 저장
-        let filename = req.file.filename;
-        console.log(req.body)
-        res.status(200).send()
+        const video = await Video.create({
+            filename: "",
+        })
+        res.status(200).send(video)
     }catch(err){
         next(err);
     }
 });
-*/
+
+//이미지
+router.post('/video/frame',uploader.single('image'),async(req,res,next)=>{
+    try{
+        //해당 이미지 db에 경로 저장
+        //위도, 경도 저장
+        const filename = req.file.filename;
+        const imageLocation = await ImageLocation.create({
+	    videoId: req.body.videoId,
+            longitude: req.body.longitude,
+            latitude: req.body.latitude,
+            filename: filename,
+        })
+        res.status(200).send(imageLocation)
+    }catch(err){
+        next(err);
+    }
+});
+
+router.post('/video/stop',uploader.single('video'),async(req,res,next)=>{
+    try{
+        //해당 이미지 db에 경로 저장
+        //위도, 경도 저장
+        const filename = req.file.filename;
+	const video = await Video.findOne({
+	    where:{id:req.body.videoId}
+	});
+	video.filename = filename;
+	await video.save();
+        res.status(200).send(video)
+    }catch(err){
+        next(err);
+    }
+});
 
 module.exports = router;

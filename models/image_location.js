@@ -28,5 +28,6 @@ module.exports = class ImageLocation extends Sequelize.Model{
 	}
 	static associate(db){
 		db.ImageLocation.belongsTo(db.User,{foreignKey:'userId',targetKey:'id'});
+		db.ImageLocation.belongsTo(db.Video,{foreignKey:'videoId',targetKey:'id'});
 	}
 };
