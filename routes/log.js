@@ -14,8 +14,9 @@ const uploader = multer({
             const ext = path.extname(file.originalname);
         const longitude = req.body.longitude;
         const latitude = req.body.latitude;
+        const altitude = req.body.altitude;
 	const videoId = typeof req.body.videoId == 'undefined'? 0 : req.body.videoId;
-            cb(null, videoId+'_'+longitude+'_'+latitude+'_'+Date.now()+ext);
+            cb(null, videoId+'_'+longitude+'_'+latitude+'_'+altitude+'_'+Date.now()+ext);
         }
     }),
     limits: {fileSize: 5*1024*1024*1024*1024},
@@ -30,6 +31,7 @@ router.post('/image',uploader.single('image'),async(req,res,next)=>{
         const imageLocation = await ImageLocation.create({
             longitude: req.body.longitude,
             latitude: req.body.latitude,
+            altitude: req.body.altitude,
             filename: filename,
         })
         res.status(200).send(imageLocation)
@@ -60,6 +62,7 @@ router.post('/video/frame',uploader.single('image'),async(req,res,next)=>{
 	    videoId: req.body.videoId,
             longitude: req.body.longitude,
             latitude: req.body.latitude,
+            altitude: req.body.altitude,
             filename: filename,
         })
         res.status(200).send(imageLocation)

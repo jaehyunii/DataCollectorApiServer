@@ -4,7 +4,7 @@ module.exports = class ImageLocation extends Sequelize.Model{
 	static init(sequelize){
 		return super.init({
 			filename:{
-				type:Sequelize.STRING(80),
+				type:Sequelize.STRING,
 				allowNull:false,
 			},
 			longitude:{
@@ -15,6 +15,10 @@ module.exports = class ImageLocation extends Sequelize.Model{
 				type:Sequelize.DOUBLE,
 				allowNull:false,
 			},
+			altitude:{
+				type:Sequelize.DOUBLE,
+				allowNull:false,
+			}
 		},{
 			sequelize,
 			timestamps:false,
