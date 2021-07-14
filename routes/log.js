@@ -12,11 +12,12 @@ const uploader = multer({
         },
         filename(req,file,cb){
             const ext = path.extname(file.originalname);
+        const userName = req.body.userName;
         const longitude = req.body.longitude;
         const latitude = req.body.latitude;
         const altitude = req.body.altitude;
 	const videoId = typeof req.body.videoId == 'undefined'? 0 : req.body.videoId;
-            cb(null, videoId+'_'+longitude+'_'+latitude+'_'+altitude+'_'+Date.now()+ext);
+            cb(null, videoId+'_'+userName+'_'+longitude+'_'+latitude+'_'+altitude+'_'+Date.now()+ext);
         }
     }),
     limits: {fileSize: 5*1024*1024*1024*1024},
@@ -29,6 +30,7 @@ router.post('/image',uploader.single('image'),async(req,res,next)=>{
         //위도, 경도 저장
         const filename = req.file.filename;
         const imageLocation = await ImageLocation.create({
+	    userId: req.body.userId,
             longitude: req.body.longitude,
             latitude: req.body.latitude,
             altitude: req.body.altitude,
@@ -59,6 +61,7 @@ router.post('/video/frame',uploader.single('image'),async(req,res,next)=>{
         //위도, 경도 저장
         const filename = req.file.filename;
         const imageLocation = await ImageLocation.create({
+	    userId: req.body.userId,
 	    videoId: req.body.videoId,
             longitude: req.body.longitude,
             latitude: req.body.latitude,
